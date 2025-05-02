@@ -15,6 +15,9 @@ import {
     useListFilterContext,
     Form,
     Link,
+    BulkUpdateWithConfirmButton,
+    BulkDeleteWithConfirmButton,
+    useRefresh,
 } from 'react-admin';
 
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
@@ -147,6 +150,27 @@ const TextWithLink = (
     );
 };
 
+const BulkActionButtons = () => {
+    const refresh = useRefresh();
+    return (
+        <>
+            <BulkUpdateWithConfirmButton
+                data={{
+                    validation_date: new Date().toISOString(),
+                }}
+                confirmContent="Are you sure you want to mark prices as validated?"
+                label="Confirm prices"
+                mutationOptions={{
+                    onSettled: () => {
+                        refresh();
+                    },
+                }}
+            />
+            <BulkDeleteWithConfirmButton mutationMode="pessimistic" />
+        </>
+    );
+};
+
 const QuoteView = () => {
     const { filterValues } = useListFilterContext();
 
@@ -204,7 +228,7 @@ const QuoteView = () => {
             <Form>
                 <MarketForm markets={markets.data} />
             </Form>
-            <Datagrid>
+            <Datagrid bulkActionButtons={<BulkActionButtons />}>
                 <TextWithLink
                     source="company_name"
                     to={v => `/companies/${v.company_id}/show/sale_prices`}
@@ -227,7 +251,7 @@ const QuoteView = () => {
                         '& .RaBooleanField-falseIcon': { color: 'red' },
                     }}
                 />
-            </Datagrid>{' '}
+            </Datagrid>
         </>
     );
 };
