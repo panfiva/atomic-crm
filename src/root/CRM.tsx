@@ -6,7 +6,6 @@ import {
     RaThemeOptions,
     Resource,
     defaultTheme,
-    localStorageStore,
 } from 'react-admin';
 import type { AdminProps, AuthProvider, DataProvider } from 'react-admin';
 import { deepmerge } from '@mui/utils';
@@ -33,6 +32,7 @@ import {
     authProvider as defaultAuthProvider,
     dataProvider as defaultDataProvider,
 } from '../providers/supabase';
+import { createStore } from '../providers/store';
 import sales from '../sales';
 import { SettingsPage } from '../settings/SettingsPage';
 import {
@@ -81,6 +81,8 @@ const defaultLightTheme = deepmerge(defaultTheme, {
         },
     },
 });
+
+const store = createStore({ store_version: '1.0.0' });
 
 /**
  * CRM Component
@@ -168,7 +170,7 @@ export const CRM = ({
             <Admin
                 dataProvider={dataProvider}
                 authProvider={authProvider}
-                store={localStorageStore(undefined, 'CRM')}
+                store={store}
                 layout={Layout}
                 loginPage={LoginPage}
                 dashboard={Dashboard}

@@ -459,6 +459,8 @@ export const LocationTabPriceList = (props: {
     const filter = { company_id, location_id };
     if (filter.location_id === undefined) delete filter.location_id;
 
+    const [selectedIds] = useStore('location_prices.selectedIds');
+
     const [savedPath, setSavedPath] = useStore(
         'location_prices.selectedIds.pathname',
         pathname
@@ -468,13 +470,17 @@ export const LocationTabPriceList = (props: {
 
     useEffect(
         () => {
-            if (savedPath !== pathname) {
+            if (
+                savedPath !== pathname &&
+                selectedIds &&
+                selectedIds.length > 0
+            ) {
                 unselectAll();
             }
             setSavedPath(pathname);
         },
 
-        [savedPath, pathname, setSavedPath, unselectAll] // make sure we unselect all when location or company changes or when table loads
+        [savedPath, pathname, setSavedPath, unselectAll, selectedIds] // make sure we unselect all when location or company changes or when table loads
     );
 
     return (

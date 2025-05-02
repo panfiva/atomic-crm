@@ -315,6 +315,8 @@ const filter = {
 export const Quote = () => {
     const pathname = 'quote';
 
+    const [selectedIds] = useStore('location_prices.selectedIds');
+
     const [savedPath, setSavedPath] = useStore(
         'location_prices.selectedIds.pathname',
         '/quote'
@@ -324,13 +326,17 @@ export const Quote = () => {
 
     useEffect(
         () => {
-            if (savedPath !== pathname) {
+            if (
+                savedPath !== pathname &&
+                selectedIds &&
+                selectedIds.length > 0
+            ) {
                 unselectAll();
             }
             setSavedPath(pathname);
         },
 
-        [savedPath, pathname, setSavedPath, unselectAll] // make sure we unselect all when location or company changes or when table loads
+        [savedPath, pathname, setSavedPath, unselectAll, selectedIds] // make sure we unselect all when location or company changes or when table loads
     );
 
     // https://mui.com/material-ui/react-checkbox/#indeterminate
